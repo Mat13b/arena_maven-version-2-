@@ -12,7 +12,7 @@ import TournamentRequest from '@components/Tournament/TournamentRequest/Tourname
 import AboutUs from "@components/AboutUs/AboutUs.jsx";
 import Winner from "./utils/Winner.jsx";
 import Register from "./components/Account/Register/Register";
-import Login from "./components/Account/Login/Login";
+import Login from "./components/Account/Login/Login.jsx";
 import CreateGuildPage from "./components/Guild/CreateGuildPage";
 import Cards from './components/Cards/Cards';
 import Profil from './components/Profil/Profil';

@@ -4,15 +4,13 @@ import * as yup from "yup";
 
 import { Link, useNavigate } from "react-router-dom";
 
-
-
 import axios from "axios";
 import { AuthContext } from "./AuthProvider";
 
 function Login() {
   const [showPassword, setShowPassword] = useState(false);
   const [submitStatus, setSubmitStatus] = useState(null);
-  const { login, isAuthenticated, user  } = useContext(AuthContext);
+  const { login, isAuthenticated, user } = useContext(AuthContext);
   const navigate = useNavigate();
 
   const togglePasswordVisibility = () => {
@@ -33,7 +31,7 @@ function Login() {
       resetForm();
       localStorage.setItem("token", response.data.token);
       console.log("Données de la réponse:", response.data);
-      
+
       if (response.data && response.data.token) {
         localStorage.setItem("token", response.data.token);
         
@@ -55,17 +53,17 @@ function Login() {
       }
     } catch (error) {
       console.error("Error logging in:", error);
-      if (error.response && error.response.status === 401) {
-        setFieldError(
-          "adresse_email",
-          "Adresse email ou mot de passe incorrect"
-        );
-        setFieldError("password", "Adresse email ou mot de passe incorrect");
+      if (error.response) {
+        if (error.response.status === 401) {
+          setFieldError("adresse_email", "Adresse email ou mot de passe incorrect");
+          setFieldError("password", "Adresse email ou mot de passe incorrect");
+        } else if (error.response.status === 500) {
+          setSubmitStatus({ type: 'error', message: 'Erreur serveur. Veuillez réessayer plus tard.' });
+        } else {
+          setSubmitStatus({ type: 'error', message: 'Erreur lors de la connexion. Veuillez réessayer.' });
+        }
       } else {
-        setFieldError(
-          "adresse_email",
-          "Erreur lors de la connexion. Veuillez réessayer."
-        );
+        setSubmitStatus({ type: 'error', message: 'Erreur réseau. Veuillez vérifier votre connexion.' });
       }
     }
     setSubmitting(false);

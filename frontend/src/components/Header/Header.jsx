@@ -5,6 +5,7 @@ import { Disclosure, Menu, Transition } from '@headlessui/react';
 import { Bars3Icon, XMarkIcon } from '@heroicons/react/24/outline';
 import iconProfile from '../../assets/iconProfile.jpg';
 import headerVector from '../../assets/headerVector.svg';
+import logout from '../../components/Account/Login/logout.jsx';
 
 const navigation = [
   { name: 'Accueil', href: '/', current: true },
@@ -100,7 +101,7 @@ export default function Header() {
                             to="/profil"
                             className={classNames(active ? 'bg-primary' : '', 'block px-4 py-2 text-sm text-black hover:text-white')}
                           >
-                            Your Profile
+                            Votre Profile
                           </Link>
                         )}
                       </Menu.Item>
@@ -110,33 +111,15 @@ export default function Header() {
                             to="/logout"
                             className={classNames(active ? 'bg-primary' : '', 'block px-4 py-2 text-sm text-black hover:text-white')}
                           >
-                            Sign out
+                           Deconnexion
                           </Link>
                         )}
                       </Menu.Item>
-                      <Menu.Item>
-                        {({ active }) => (
-                          <a
-                            href="/profil"
-                            className={classNames(active ? 'bg-primary' : '', 'block px-4 py-2 text-sm text-black hover:text-white')}
-                          >
-                            {userData ? `Logged in as ${userData.name}` : 'Profil'}
-                          </a>
-                        )}
-                      </Menu.Item>
-                      <Menu.Item>
-                        {({ active }) => (
-                          isAuthenticated ? (
-                            <button
-                              onClick={handleLogout}
-                              className={classNames(active ? 'bg-red-600' : 'bg-red-500', 'block w-full text-left px-4 py-2 text-sm text-white hover:bg-red-600 hover:text-white')}
-                            >
-                              Déconnexion
-                            </button>
-                          ) : (
-
+                      {!isAuthenticated && (
+                        <Menu.Item>
+                          {({ active }) => (
                             <Link
-                              to="/login"
+                              to="/logout"
                               className={classNames(
                                 active ? "bg-primary" : "",
                                 "block px-4 py-2 text-sm text-black hover:text-white"
@@ -144,9 +127,9 @@ export default function Header() {
                             >
                               Connexion
                             </Link>
-                          )
-                        )}
-                      </Menu.Item>
+                          )}
+                        </Menu.Item>
+                      )}
                     </Menu.Items>
                   </Transition>
                 </Menu>

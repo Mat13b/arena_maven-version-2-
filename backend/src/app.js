@@ -15,7 +15,7 @@ app.use(cors({
 
 // Importez et utilisez le routeur principal
 const router = require("./router");
-app.use(router);
+app.use('/api', router);
 
 // Middleware pour servir les fichiers statiques dans `backend/public` et `backend/uploads`
 app.use(express.static(path.join(__dirname, "../public")));

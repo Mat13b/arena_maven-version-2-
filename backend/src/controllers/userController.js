@@ -51,7 +51,7 @@ const edit = (req, res) => {
 const add = async (req, res) => {
   try {
     const user = req.body;
-    user.password = await argon2.hash(user.password);
+    // user.password = await argon2.hash(user.password);
 
     const result = await models.user.insert(user);
     res.location(`/user/${result.insertId}`).sendStatus(201);
@@ -78,11 +78,10 @@ const findIfUserSubController= (req, res) => {
 
 const getUserByEmail = (req, res, next) => {
   const { email } = req.body;
-  models.user
-    .findUserByEmail(email)
-    .then(([users]) => {
-      if (users.length > 0) {
-        req.user = users[0];
+  models.user.findUserByEmail(email)
+    .then(([rows]) => {
+      if (rows.length > 0) {
+        req.user = rows[0];
         next();
       } else {
         res.sendStatus(401);

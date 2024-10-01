@@ -33,7 +33,7 @@ const TournamentList = () => {
   return (
     <div className="bg-gradient-to-tr from-black via-vertBG to-black p-4">
       <div className="flex flex-col items-center mb-12">
-        <h1 className="text-4xl font-bold text-white">Découverte</h1>
+        <h1 className="text-4xl font-bold text-white">Découvrir</h1>
         <div className="w-full h-20 flex justify-center absolute top-3.5 right-3.5">
         </div>
       </div>

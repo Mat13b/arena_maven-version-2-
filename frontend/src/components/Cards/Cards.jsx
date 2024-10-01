@@ -38,11 +38,11 @@ const Cards = ({ tournaments }) => {
                 />
                 {item.total_players > item.participants.length && item.date > formattedDate ? (
                   <span className="absolute top-2 right-2 bg-primary text-white text-xs font-bold py-1 px-2 rounded-full">
-                    Registration Open
+                    Inscription ouverte
                   </span>
                 ) : (
                   <span className="absolute top-2 right-2 bg-warning text-white text-xs font-bold py-1 px-2 rounded-full">
-                    Registration Closed
+                    Inscription fermée
                   </span>
                 )}
                 <div className="absolute bottom-0 left-0 right-0 bg-white text-black text-center text-sm py-1">
