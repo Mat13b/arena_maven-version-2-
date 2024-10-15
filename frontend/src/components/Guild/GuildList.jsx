@@ -12,7 +12,7 @@ const GuildList = () => {
   useEffect(() => {
     const fetchGuilds = async () => {
       try {
-        const response = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/guild`);
+        const response = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/api/guild`);
         console.log('Response data:', response.data);
         setGuilds(response.data[0]); // Assumer que response.data est un tableau de guildes
       } catch (err) {
@@ -28,7 +28,7 @@ const GuildList = () => {
         const decodedToken = JSON.parse(atob(tokenPayload));
         setUserId(decodedToken.sub.id);
       } catch (error) {
-        console.error('Error decoding token:', error);
+        console.error('Erreur lors du décodage du token:', error);
       }
     }
 
@@ -57,7 +57,7 @@ const GuildList = () => {
         });
       });
     } catch (error) {
-      console.error('Error joining guild:', error);
+      console.error('Erreur lors de l\'inscription à la guilde:', error);
     }
   };
 
@@ -78,16 +78,16 @@ const GuildList = () => {
         });
       });
     } catch (error) {
-      console.error('Error leaving guild:', error);
+      console.error('Erreur lors de la désinscription de la guilde:', error);
     }
   };
 
   if (error) {
-    return <div>Error: {error}</div>;
+    return <div>Erreur: {error}</div>;
   }
 
   if (!Array.isArray(guilds) || guilds.length === 0) {
-    return <div>No guilds available</div>;
+    return <div>Aucune guilde disponible</div>;
   }
 
   return (

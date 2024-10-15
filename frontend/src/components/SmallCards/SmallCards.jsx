@@ -11,11 +11,11 @@ export default function SmallCards({ tournament, index }) {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const res = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/participation/tournament/${tournament.id}`);
+        const res = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/api/participation/tournament/${tournament.id}`);
       
         setParticipants(res.data);
       } catch (error) {
-        console.error("Error fetching data:", error);
+        console.error("erreur lors de la récupération des données:", error);
       }
     };
     fetchData();

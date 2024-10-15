@@ -20,13 +20,13 @@ function Login() {
   const handleLogin = async (values, { setSubmitting, setFieldError, resetForm }) => {
     try {
       const response = await axios.post(
-        `${import.meta.env.VITE_BACKEND_URL}/user/login`,
+        `${import.meta.env.VITE_BACKEND_URL}/api/user/login`,
         {
           email: values.adresse_email,
-          password: values.password,
+          mot_de_passe: values.mot_de_passe,
         }
       );
-      console.log("User logged in successfully:", response.data);
+      console.log("Utilisateur connecté avec succès:", response.data);
       setSubmitStatus({ type: 'success', message: 'Connexion réussie!' });
       resetForm();
       localStorage.setItem("token", response.data.token);
@@ -52,11 +52,11 @@ function Login() {
         setSubmitStatus({ type: 'error', message: 'Erreur lors de la connexion. Veuillez réessayer.' });
       }
     } catch (error) {
-      console.error("Error logging in:", error);
+      console.error("Erreur de connexion:", error);
       if (error.response) {
         if (error.response.status === 401) {
           setFieldError("adresse_email", "Adresse email ou mot de passe incorrect");
-          setFieldError("password", "Adresse email ou mot de passe incorrect");
+          setFieldError("mot_de_passe", "Adresse email ou mot de passe incorrect");
         } else if (error.response.status === 500) {
           setSubmitStatus({ type: 'error', message: 'Erreur serveur. Veuillez réessayer plus tard.' });
         } else {
@@ -90,13 +90,13 @@ function Login() {
       <div className="w-full max-w-md sm:max-w-lg md:max-w-xl lg:max-w-2xl xl:max-w-3xl mt-10 bg-primary mt-20">
         <article className="p-6">
           <Formik
-            initialValues={{ adresse_email: "", password: "" }}
+            initialValues={{ adresse_email: "", mot_de_passe: "" }}
             validationSchema={yup.object().shape({
               adresse_email: yup
                 .string()
                 .email("Email invalide")
                 .required("L'adresse email est requise"),
-              password: yup
+              mot_de_passe: yup
                 .string()
                 .min(
                   8,

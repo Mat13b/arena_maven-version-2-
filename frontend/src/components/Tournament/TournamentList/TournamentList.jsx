@@ -8,13 +8,13 @@ const TournamentList = () => {
 
   const fetchData = async () => {
     try {
-      const res = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/tournament`);
+      const res = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/api/tournament`);
       const tournamentsData = res.data;
 
       // Fetch participants pour chaque participants
       const tournamentsWithParticipants = await Promise.all(
         tournamentsData.map(async (tournament) => {
-          const participantsRes = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/participation/tournament/${tournament.id}`);
+          const participantsRes = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/api/participation/tournament/${tournament.id}`);
           tournament.participants = participantsRes.data;
           return tournament;
         })
@@ -22,7 +22,7 @@ const TournamentList = () => {
 
       setTournaments(tournamentsWithParticipants);
     } catch (error) {
-      console.error("Error fetching data:", error);
+      console.error("erreur lors de la récupération des données:", error);
     }
   };
 
@@ -53,165 +53,3 @@ const TournamentList = () => {
 
 export default TournamentList;
 
-
-// import React, { useState, useEffect } from 'react';
-
-// const TournamentList = () => {
-//   const [isTokenValid, setIsTokenValid] = useState(false);
-//   const [tournaments, setTournaments] = useState([]);
-
-//   const checkToken = async () => {
-//     try {
-//       const token = localStorage.getItem('token');
-//       if (!token) {
-//         setIsTokenValid(false);
-//         return;
-//       }
-
-//       const response = await fetch('/api/auth/check-token', {
-//         method: 'POST',
-//         headers: {
-//           'Content-Type': 'application/json',
-//           Authorization: `Bearer ${token}`,
-//         },
-//       });
-
-//       if (response.ok) {
-//         setIsTokenValid(true);
-//         // Charge la liste des tournois une fois le token validé
-//         loadTournaments(token);
-//       } else {
-//         setIsTokenValid(false);
-//       }
-//     } catch (error) {
-//       console.error('Error checking token:', error);
-//     }
-//   };
-
-//   const loadTournaments = async (token) => {
-//     try {
-//       const response = await fetch('/api/tournament', {
-//         method: 'GET',
-//         headers: {
-//           Authorization: `Bearer ${token}`,
-//         },
-//       });
-
-//       if (response.ok) {
-//         const data = await response.json();
-//         setTournaments(data); // Met à jour l'état avec les tournois récupérés depuis l'API
-//       } else {
-//         console.error('Failed to fetch tournaments');
-//       }
-//     } catch (error) {
-//       console.error('Error fetching tournaments:', error);
-//     }
-//   };
-
-//   useEffect(() => {
-//     checkToken();
-//   }, []);
-
-//   return (
-//     <div>
-//       {isTokenValid ? (
-//         <div>
-//           <h1>Tournament List</h1>
-//           <ul>
-//             {tournaments.map(tournament => (
-//               <li key={tournament.id}>
-//                 {tournament.name} - {tournament.date}
-//                 {/* Ajoutez d'autres détails du tournoi selon vos besoins */}
-//               </li>
-//             ))}
-//           </ul>
-//         </div>
-//       ) : (
-//         <p>Unauthorized access. Please log in.</p>
-//       )}
-//     </div>
-//   );
-// };
-
-// export default TournamentList;
-
-// import React, { useState, useEffect } from 'react';
-
-// const TournamentList = () => {
-//   const [isTokenValid, setIsTokenValid] = useState(false);
-//   const [tournaments, setTournaments] = useState([]);
-
-//   const checkToken = async () => {
-//     try {
-//       const token = localStorage.getItem('token');
-//       if (!token) {
-//         setIsTokenValid(false);
-//         return;
-//       }
-
-//       const response = await fetch('/api/auth/check-token', {
-//         method: 'POST',
-//         headers: {
-//           'Content-Type': 'application/json',
-//          'Authorization': `Bearer ${token}`,
-//         },
-//       });
-
-//       if (response.ok) {
-//         setIsTokenValid(true);
-//         // Charge la liste des tournois une fois le token validé
-//         loadTournaments(token);
-//       } else {
-//         setIsTokenValid(false);
-//       }
-//     } catch (error) {
-//       console.error('Error checking token:', error);
-//     }
-//   };
-
-//   const loadTournaments = async (token) => {
-//     try {
-//       const response = await fetch('/api/tournament', {
-//         method: 'GET',
-//         headers: {
-//           Authorization: `Bearer ${token}`,
-//         },
-//       });
-
-//       if (response.ok) {
-//         const data = await response.json();
-//         setTournaments(data); // Met à jour l'état avec les tournois récupérés depuis l'API
-//       } else {
-//         console.error('Failed to fetch tournaments');
-//       }
-//     } catch (error) {
-//       console.error('Error fetching tournaments:', error);
-//     }
-//   };
-
-//   useEffect(() => {
-//     checkToken();
-//   }, []);
-
-//   return (
-//     <div>
-//       {isTokenValid ? (
-//         <div>
-//           <h1>Tournament List</h1>
-//           <ul>
-//             {tournaments.map(tournament => (
-//               <li key={tournament.id}>
-//                 {tournament.name} - {tournament.date}
-//                 {/* Ajoutez d'autres détails du tournoi selon vos besoins */}
-//               </li>
-//             ))}
-//           </ul>
-//         </div>
-//       ) : (
-//         <p>Unauthorized access. Please log in.</p>
-//       )}
-//     </div>
-//   );
-// };
-
-// export default TournamentList;

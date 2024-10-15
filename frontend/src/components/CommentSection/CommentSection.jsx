@@ -16,18 +16,18 @@ function CommentSection({ tournament }) {
 
   useEffect(() => {
     axios
-      .get(`${import.meta.env.VITE_BACKEND_URL}/comments/by-tournament/${tournament.id}`)
+      .get(`${import.meta.env.VITE_BACKEND_URL}/api/comments/by-tournament/${tournament.id}`)
       .then((response) => {
         const lastThreeComments = response.data.slice(-3);
-        console.log("Fetched comments:", lastThreeComments); // Check fetched comments
+        console.log("Commentaires récupérés:", lastThreeComments); // Check fetched comments
         setComments(lastThreeComments);
         localStorage.setItem(`comments-${id}`, JSON.stringify(lastThreeComments));
       })
       .catch((error) => {
-        console.error("Error loading comments:", error);
+        console.error("Erreur de chargement des commentaires:", error);
         const savedComments = localStorage.getItem(`comments-${id}`);
         if (savedComments) {
-          console.log("Loaded comments from localStorage:", JSON.parse(savedComments));
+          console.log("Commentaires récupérés depuis le localStorage:", JSON.parse(savedComments));
           setComments(JSON.parse(savedComments));
         }
       });
@@ -35,9 +35,9 @@ function CommentSection({ tournament }) {
 
   useEffect(() => {
     axios
-      .get(`${import.meta.env.VITE_BACKEND_URL}/user`)
+      .get(`${import.meta.env.VITE_BACKEND_URL}/api/user`)
       .then((response) => setUsers(response.data))
-      .catch((error) => console.error("Error loading users:", error));
+      .catch((error) => console.error("Erreur de chargement des utilisateurs:", error));
   }, []);
 
   const getToken = () => {
@@ -60,7 +60,7 @@ function CommentSection({ tournament }) {
   const handleAddComment = () => {
     const userInfo = getUserInfo();
     if (!userInfo) {
-      console.error("User not logged in");
+      console.error("Utilisateur non connecté");
       return;
     }
 
@@ -71,9 +71,9 @@ function CommentSection({ tournament }) {
     };
 
     axios
-      .post(`${import.meta.env.VITE_BACKEND_URL}/comments`, commentData)
+      .post(`${import.meta.env.VITE_BACKEND_URL}/api/comments`, commentData)
       .then((response) => {
-        console.log("Response from server after adding comment:", response.data);
+        console.log("Réponse du serveur après ajout du commentaire:", response.data);
         if (response.status === 201) {
           const newComments = [
             ...comments,
@@ -88,29 +88,29 @@ function CommentSection({ tournament }) {
           updateLocalStorage(newComments);
           setNewComment("");
         } else {
-          console.error("Failed to add comment:", response);
+          console.error("Erreur lors de l'ajout du commentaire:", response);
         }
       })
-      .catch((error) => console.error("Failed to add comment:", error));
+      .catch((error) => console.error("Erreur lors de l'ajout du commentaire:", error));
   };
 
   const handleEditComment = (commentId) => {
-    console.log("Editing comment with ID:", commentId);
+    console.log("Edition du commentaire avec l'ID:", commentId);
     setEditingComment(commentId);
     const comment = comments.find((comment) => comment.id === commentId);
     setEditedContent(comment.content);
   };
 
   const handleUpdateComment = (commentId) => {
-    console.log("Updating comment with ID:", commentId);
+    console.log("Mise à jour du commentaire avec l'ID:", commentId);
     const userInfo = getUserInfo();
     if (!userInfo) {
-      console.error("User not logged in");
+      console.error("Utilisateur non connecté");
       return;
     }
 
     axios
-      .put(`${import.meta.env.VITE_BACKEND_URL}/comments/${commentId}`, {
+      .put(`${import.meta.env.VITE_BACKEND_URL}/api/comments/${commentId}`, {
         content: editedContent,
         user_id: userInfo.sub.id,
         tournament_id: tournament.id,
@@ -124,19 +124,19 @@ function CommentSection({ tournament }) {
         setEditingComment(null);
         setEditedContent("");
       })
-      .catch((error) => console.error("Failed to update comment:", error));
+      .catch((error) => console.error("Erreur lors de la mise à jour du commentaire:", error));
   };
 
   const handleDeleteComment = (commentId) => {
-    console.log("Deleting comment with ID:", commentId);
+    console.log("Suppression du commentaire avec l'ID:", commentId);
     axios
-      .delete(`${import.meta.env.VITE_BACKEND_URL}/comments/${commentId}`)
+      .delete(`${import.meta.env.VITE_BACKEND_URL}/api/comments/${commentId}`)
       .then(() => {
         const updatedComments = comments.filter((comment) => comment.id !== commentId);
         setComments(updatedComments);
         updateLocalStorage(updatedComments);
       })
-      .catch((error) => console.error("Failed to delete comment:", error));
+      .catch((error) => console.error("Erreur lors de la suppression du commentaire:", error));
   };
 
   // const getUserName = (id) => {

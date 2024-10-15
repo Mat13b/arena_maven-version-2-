@@ -11,11 +11,11 @@ export default function Profil() {
     useEffect(() => {
         const fetchTournaments = async () => {
             try {
-                const res = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/tournament`);
+                const res = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/api/tournament`);
                 setTournaments(res.data);
                 // Fetch participants for each tournament
                 const participantsPromises = res.data.map(tournament =>
-                    axios.get(`${import.meta.env.VITE_BACKEND_URL}/participation/tournament/${tournament.id}`)
+                    axios.get(`${import.meta.env.VITE_BACKEND_URL}/api/participation/tournament/${tournament.id}`)
                 );
                 const participantsResponses = await Promise.all(participantsPromises);
                 const participantsData = participantsResponses.reduce((acc, res, index) => {
@@ -24,7 +24,7 @@ export default function Profil() {
                 }, {});
                 setParticipantsData(participantsData);
             } catch (error) {
-                console.error("Error fetching data:", error);
+                console.error("erreur lors de la récupération des données:", error);
             }
         };
         fetchTournaments();

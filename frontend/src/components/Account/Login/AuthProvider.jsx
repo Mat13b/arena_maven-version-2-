@@ -44,7 +44,7 @@ const AuthProvider = ({ children }) => {
 
   const logout = async () => {
     try {
-      await axios.delete(`${import.meta.env.VITE_BACKEND_URL}/user/logout`);
+      await axios.delete(`${import.meta.env.VITE_BACKEND_URL}/api/user/logout`);
         localStorage.removeItem('token');
         setIsAuthenticated(false);
         setUser(null);

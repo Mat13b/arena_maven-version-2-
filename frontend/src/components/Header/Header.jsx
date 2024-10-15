@@ -36,7 +36,7 @@ export default function Header() {
                 {/* Mobile menu button */}
                 <Disclosure.Button className="relative inline-flex items-center justify-center rounded-md p-2 text-white hover:bg-primary hover:text-white focus:outline-none">
                   <span className="absolute -inset-0.5" />
-                  <span className="sr-only">Open main menu</span>
+                  <span className="sr-only">Ouvrir le menu principal</span>
                   {open ? (
                     <XMarkIcon className="block h-12 w-12" aria-hidden="true" />
                   ) : (
@@ -78,7 +78,7 @@ export default function Header() {
                   <div>
                     <Menu.Button className="relative flex rounded-full text-sm focus:outline-none">
                       <span className="absolute" />
-                      <span className="sr-only">Open user menu</span>
+                      <span className="sr-only">Ouvrir le menu utilisateur</span>
                       <img
                         className="h-10 w-10 rounded-full -translate-x-14 -translate-y-3"
                         src={iconProfile}
@@ -119,7 +119,7 @@ export default function Header() {
                         <Menu.Item>
                           {({ active }) => (
                             <Link
-                              to="/logout"
+                              to="/login"
                               className={classNames(
                                 active ? "bg-primary" : "",
                                 "block px-4 py-2 text-sm text-black hover:text-white"

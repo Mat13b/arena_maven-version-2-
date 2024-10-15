@@ -25,7 +25,7 @@ const getUserInfo = () => {
       const decodedToken = jwtDecode(token); // Use jwt-decode to get the info stored in the payload
       return decodedToken; // { id, username, email, role }
     } catch (error) {
-      console.error("Invalid token:", error);
+      console.error("Token invalide:", error);
       return null;
     }
   }
@@ -69,7 +69,7 @@ const formik = useFormik({
     data.append('timage', values.timage);
     data.append('torganizer_id', torganizer_id);
 
-    console.log('Data being sent:', {
+    console.log('Données envoyées:', {
       tname: values.tname,
       tdate: values.tdate,
       nbPlayer: values.nbPlayer,
@@ -81,7 +81,7 @@ const formik = useFormik({
     if (token) {
       try {
         // Send a POST request to create a new tournament with the provided data
-        const response = await axios.post(`${import.meta.env.VITE_BACKEND_URL}/tournament`, data, {
+        const response = await axios.post(`${import.meta.env.VITE_BACKEND_URL}/api/tournament`, data, {
           headers: {
             'Content-Type': 'multipart/form-data',
             'Authorization': `Bearer ${token}`, // Include the token in the Authorization header
@@ -140,7 +140,7 @@ const formik = useFormik({
             ) : null}
           </div>
           <div className="w-full m-2">
-            <label htmlFor="nbPlayer">Nombre de joueurs :    </label>
+            <label htmlFor="nbPlayer">Nombre de joueurs :</label>
             <select
               id="nbPlayer"
               name="nbPlayer"
@@ -149,6 +149,7 @@ const formik = useFormik({
               onBlur={formik.handleBlur}
               value={formik.values.nbPlayer}
             >
+              <option value="">Choisir le nombre de joueurs</option>
               <option value="2">2</option>
               <option value="4">4</option>
               <option value="8">8</option>

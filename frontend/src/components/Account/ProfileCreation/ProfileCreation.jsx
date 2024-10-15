@@ -4,31 +4,31 @@ import img from '@assets/iconProfile.jpg';
 
 function ProfileCreation() {
   const [user, setUser] = useState({
-    username: '',
-    email: '',
+    nom_utilisateur: '',
+    adresse_email: '',
     major: '',
-    password: '',
+    mot_de_passe: '',
     presentation: '',
     role: '',
-    language: '',
-    timeZone: '',
-    level: '',
-    location: '',
-    preferredGameMode: '',
-    gameGenre: '',
-    preferredEventType: '',
-    privacySettings: '',
-    accountCreationDate: '',
+    langue: '',
+    fuseau_horaire: '',
+    niveau: '',
+    localisation_geographique: '',
+    mode_de_jeu_prefere: '',
+    genre_de_jeu: '',
+    type_d_evenement_prefere: '',
+    parametres_de_confidentialite: '',
+    date_de_creation_du_compte: '',
   });
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/user`);
+        const response = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/api/user`);
         setUser(response.data);
         console.log('user', response.data);
       } catch (error) {
-        console.error('Error fetching user:', error);
+        console.error('Erreur lors de la récupération de l\'utilisateur:', error);
       }
     };
 
@@ -44,13 +44,13 @@ function ProfileCreation() {
         <div className="flex flex-col md:flex-row gap-4 md:gap-20">
           <div className="p-7 rounded-lg bg-black flex flex-col items-center w-full md:w-1/3">
             <h1>Informations personnelles</h1>
-            <p>Nom d'utilisateur: {user.username}</p>
+            <p>Nom d'utilisateur: {user.nom_utilisateur}</p>
             <hr className="w-full bg-white" />
-            <p>Email: {user.email}</p>
+            <p>Email: {user.adresse_email}</p>
             <hr className="w-full bg-white" />
             <p>Major: {user.major}</p>
             <hr className="w-full bg-white" />
-            <p>Mot de passe: {user.password}</p>
+            <p>Mot de passe: {user.mot_de_passe}</p>
             <hr className="w-full bg-white" />
             <p>Texte de présentation: {user.presentation}</p>
             <hr className="w-full bg-white" />
@@ -59,21 +59,21 @@ function ProfileCreation() {
           </div>
           <div className="p-7 rounded-lg bg-black flex flex-col items-center w-full md:w-1/3">
             <h1>Préférence de jeu</h1>
-            <p>Langue: {user.language}</p>
+            <p>Langue: {user.langue}</p>
             <hr className="w-full bg-white" />
-            <p>Fuseau horaire: {user.timeZone}</p>
+            <p>Fuseau horaire: {user.fuseau_horaire}</p>
             <hr className="w-full bg-white" />
-            <p>Niveau: {user.level}</p>
+            <p>Niveau: {user.niveau}</p>
             <hr className="w-full bg-white" />
-            <p>Localisation géographique: {user.location}</p>
+            <p>Localisation géographique: {user.localisation_geographique}</p>
             <hr className="w-full bg-white" />
-            <p>Mode de jeu préféré: {user.preferredGameMode}</p>
+            <p>Mode de jeu préféré: {user.mode_de_jeu_prefere}</p>
             <hr className="w-full bg-white" />
-            <p>Genre de jeu: {user.gameGenre}</p>
+            <p>Genre de jeu: {user.genre_de_jeu}</p>
             <hr className="w-full bg-white" />
-            <p>Type d'événement préféré: {user.preferredEventType}</p>
+            <p>Type d'événement préféré: {user.type_d_evenement_prefere}</p>
             <hr className="w-full bg-white" />
-            <p>Paramètres de confidentialité: {user.privacySettings}</p>
+            <p>Paramètres de confidentialité: {user.parametres_de_confidentialite}</p>
             <hr className="w-full bg-white" />
           </div>
           <div className="p-2 rounded-lg bg-black flex flex-col items-center w-full md:w-1/3">
@@ -81,7 +81,7 @@ function ProfileCreation() {
             <section>
               <p>Photo de profil</p>
               <img src={img} alt="Profile" />
-              <h2>Date de création du compte: {user.accountCreationDate}</h2>
+              <h2>Date de création du compte: {user.date_de_creation_du_compte}</h2>
             </section>
           </div>
         </div>

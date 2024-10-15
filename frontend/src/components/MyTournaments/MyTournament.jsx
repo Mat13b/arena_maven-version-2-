@@ -43,7 +43,7 @@ export default function MyTournament() {
       const fetchDataInscription = async () => {
         if (token) {
           try {
-            const res = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/user/registered-tournaments/${userInfo.sub.id}`, {
+            const res = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/api/user/registered-tournaments/${userInfo.sub.id}`, {
               headers: {
                 'Content-Type': 'multipart/form-data',
                 'Authorization': `Bearer ${token}`,
@@ -52,17 +52,17 @@ export default function MyTournament() {
           
             setInscription(res.data);
           } catch (error) {
-            console.error("Error fetching data:", error);
+            console.error("erreur lors de la récupération des données:", error);
           }
         }else{
-          console.error('Token is not available');
+          console.error('Token non disponible');
         }
       };
 
       const fetchDataCreation = async () => {
         if (token) {
           try {
-            const res = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/user/created-tournaments/${userInfo.sub.id}`, {
+            const res = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/api/user/created-tournaments/${userInfo.sub.id}`, {
               headers: {
                 'Content-Type': 'multipart/form-data',
                 'Authorization': `Bearer ${token}`,
@@ -70,10 +70,10 @@ export default function MyTournament() {
             });
             setCreation(res.data);
           } catch (error) {
-            console.error('Error fetching data:', error);
+            console.error('erreur lors de la récupération des données:', error);
           }
         } else {
-          console.error('Token is not available');
+          console.error('Token non disponible');
         }
       };
     

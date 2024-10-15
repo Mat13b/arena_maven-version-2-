@@ -18,7 +18,7 @@ const BracketGenerator = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const res = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/participation/tournament/${id}`);
+        const res = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/api/participation/tournament/${id}`);
         setParticipants(res.data);
       } catch (error) {
         console.error('Error fetching participants:', error);
@@ -37,7 +37,7 @@ const BracketGenerator = () => {
       const shuffledParticipants = shuffleArray(participants);
       await generateBrackets(shuffledParticipants);
     } catch (error) {
-      console.error('Error starting tournament:', error);
+      console.error('erreur lors de la démarrage du tournoi:', error);
     }
   };
 
@@ -69,10 +69,10 @@ const BracketGenerator = () => {
 
     const matchIdPromises = roundMatches.map(async (match) => {
       try {
-        const res = await axios.post(`${import.meta.env.VITE_BACKEND_URL}/tournament_matches`, match);
+        const res = await axios.post(`${import.meta.env.VITE_BACKEND_URL}/api/tournament_matches`, match);
         return res.data.id;
       } catch (error) {
-        console.error('Error creating match:', error);
+        console.error('erreur lors de la création du match:', error);
         throw error; // Propagate the error up
       }
     });
@@ -82,7 +82,7 @@ const BracketGenerator = () => {
       setMatchIds(ids);
       setBrackets([generatedBrackets]);
     } catch (error) {
-      console.error('Error setting match IDs:', error);
+      console.error('erreur lors de la définition des IDs des matchs:', error);
       throw error; // Propagate the error up
     }
   };
@@ -136,9 +136,9 @@ const BracketGenerator = () => {
       };
 
       try {
-        await axios.put(`${import.meta.env.VITE_BACKEND_URL}/tournament_matches/${matchId}`, updatedMatch);
+        await axios.put(`${import.meta.env.VITE_BACKEND_URL}/api/tournament_matches/${matchId}`, updatedMatch);
       } catch (error) {
-        console.error('Error updating match:', error);
+        console.error('erreur lors de la mise à jour du match:', error);
         throw error; // Propagate the error up
       }
     }
@@ -173,10 +173,10 @@ const BracketGenerator = () => {
 
       const newMatchIdPromises = roundMatches.map(async (match) => {
         try {
-          const res = await axios.post(`${import.meta.env.VITE_BACKEND_URL}/tournament_matches`, match);
+          const res = await axios.post(`${import.meta.env.VITE_BACKEND_URL}/api/tournament_matches`, match);
           return res.data.id;
         } catch (error) {
-          console.error('Error creating match:', error);
+          console.error('erreur lors de la création du match:', error);
           throw error; // Propagate the error up
         }
       });
@@ -185,7 +185,7 @@ const BracketGenerator = () => {
         const ids = await Promise.all(newMatchIdPromises);
         setMatchIds(ids);
       } catch (error) {
-        console.error('Error setting match IDs:', error);
+        console.error('erreur lors de la définition des IDs des matchs:', error);
         throw error; // Propagate the error up
       }
       console.log("id au deuxieme round", matchIds);
@@ -204,7 +204,7 @@ const BracketGenerator = () => {
       </div>
       <div className="flex justify-center gap-20 mt-6">
         <div className="bg-gray-900 text-white rounded-lg p-6">
-          <h3 className="text-2xl font-semibold mb-6 text-center text-green-400">Matches</h3>
+          <h3 className="text-2xl font-semibold mb-6 text-center text-green-400">Matchs</h3>
           <ul>
             {brackets[currentRound - 1]?.map((match, matchIndex) => (
               <li key={matchIndex} className="flex justify-between items-center p-2 bg-gray-800 rounded-lg mb-2">
@@ -234,14 +234,14 @@ const BracketGenerator = () => {
           </ul>
         </div>
         <div className="bg-gray-900 text-white rounded-lg p-6">
-          <h3 className="text-2xl font-semibold mb-6 text-center text-green-400">Results</h3>
+          <h3 className="text-2xl font-semibold mb-6 text-center text-green-400">Résultats</h3>
           <div className="flex flex-col justify-center items-center h-full">
             {winner ? (
-              <span className="text-xl text-gray-500">{winner.username} won</span>
+              <span className="text-xl text-gray-500">{winner.username} a gagné</span>
             ) : (
               results.map((result, roundIndex) => (
                 <div key={roundIndex} className="mb-4">
-                  <h4 className="text-lg font-semibold text-green-400">Round {result.round}</h4>
+                  <h4 className="text-lg font-semibold text-green-400">Tour {result.round}</h4>
                   <ul>
                     {result.matches.map((match, matchIndex) => (
                       <li key={matchIndex} className="flex justify-between items-center p-2 bg-gray-800 rounded-lg mb-2">
@@ -258,8 +258,8 @@ const BracketGenerator = () => {
         </div>
       </div>
       <div className="flex justify-center gap-10 mt-6">
-        <button onClick={nextRound} className="bg-primary hover:bg-secondary text-2xl text-white font-bold py-2 px-4 border-b-4 border-secondary hover:border-tertiary rounded">Next Round</button>
-        <button onClick={() => setShowModal(true)} className="bg-primary hover:bg-secondary text-2xl text-white font-bold py-2 px-4 border-b-4 border-secondary hover:border-tertiary rounded">End Tournament</button>
+        <button onClick={nextRound} className="bg-primary hover:bg-secondary text-2xl text-white font-bold py-2 px-4 border-b-4 border-secondary hover:border-tertiary rounded">Tour suivant</button>
+        <button onClick={() => setShowModal(true)} className="bg-primary hover:bg-secondary text-2xl text-white font-bold py-2 px-4 border-b-4 border-secondary hover:border-tertiary rounded">Finir le tournoi</button>
       </div>
       <ModalBracket showModal={showModal} setShowModal={setShowModal} endTournament={endTournament}></ModalBracket>
     </div>

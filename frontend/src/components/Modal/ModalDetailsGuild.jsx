@@ -33,7 +33,7 @@ const ModalDetailsGuild = ({ showModal, setShowModal, guildDetails, userId }) =>
         }
       };
 
-      const response = await axios.put(`${import.meta.env.VITE_BACKEND_URL}/guild/${guildDetails.id}`, formData, config);
+      const response = await axios.put(`${import.meta.env.VITE_BACKEND_URL}/api/guild/${guildDetails.id}`, formData, config);
       console.log('Guild updated:', response.data);
       setShowModal(false);
     } catch (error) {

@@ -14,7 +14,7 @@ export default function Homepage() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const res = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/tournament`);
+        const res = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/api/tournament`);
         console.log(res.data);
         setTournaments(res.data);
       } catch (error) {

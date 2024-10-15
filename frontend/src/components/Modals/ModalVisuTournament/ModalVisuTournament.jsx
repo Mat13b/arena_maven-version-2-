@@ -41,10 +41,10 @@ export default function ModalVisuTournament({ showModal, setShowModal, tournamen
   // Function to fetch data about the tournament subscription status
   const fetchData = async () => {
     try {
-      const res = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/tournament/${tournament.id}/user/${userInfo.sub.id}`);
+      const res = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/api/tournament/${tournament.id}/user/${userInfo.sub.id}`);
       setSub(res.data);
     } catch (error) {
-      console.error("Error fetching data:", error);
+      console.error("erreur lors de la récupération des données:", error);
     }
   };
 
@@ -82,7 +82,7 @@ export default function ModalVisuTournament({ showModal, setShowModal, tournamen
   // Function to handle editing the tournament details
   const handleEdit = async () => {
     try {
-      const res = await axios.put(`${import.meta.env.VITE_BACKEND_URL}/tournament/${tournament.id}`, {
+      const res = await axios.put(`${import.meta.env.VITE_BACKEND_URL}/api/tournament/${tournament.id}`, {
         name: editedName,
         short_description: editedDescription
       });
@@ -92,21 +92,21 @@ export default function ModalVisuTournament({ showModal, setShowModal, tournamen
         setIsModified(false);
       }
     } catch (error) {
-      console.error("Error updating tournament:", error);
+      console.error("erreur lors de la mise à jour du tournoi:", error);
     }
   };
 
   // Function to delete the tournament
   const deleteTournament = async () => {
     try {
-      const res = await axios.delete(`${import.meta.env.VITE_BACKEND_URL}/tournament/${tournament.id}`);
+      const res = await axios.delete(`${import.meta.env.VITE_BACKEND_URL}/api/tournament/${tournament.id}`);
       if (res.status === 204) {
         setShowPopup(false);
         setShowModal(false); // Close both modals as the tournament is deleted
         location.reload();
       }
     } catch (error) {
-      console.error("Error deleting tournament:", error);
+      console.error("erreur lors de la suppression du tournoi:", error);
     }
   };
 
