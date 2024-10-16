@@ -19,6 +19,28 @@ function Register() {
     setShowPassword(!showPassword);
   };
 
+  // Fonction pour déterminer la couleur du label
+  const getLabelColor = (errors, touched, fieldName) => {
+    if (touched[fieldName] && errors[fieldName]) {
+      return 'text-red-500'; // Rouge si le champ a une erreur
+    } else if (touched[fieldName] && !errors[fieldName]) {
+      return 'text-green-500'; // Vert si le champ est valide
+    }
+    return '';
+  };
+
+  // Fonction pour déterminer la couleur de la bordure du champ
+  const getFieldBorderColor = (value, fieldName) => {
+    if (value === "") {
+      return 'border-red-500'; // Rouge si le champ est vide
+    } else if (fieldName === "email" && value.includes("@") && value.includes(".")) {
+      return 'border-green-500'; // Vert si l'email contient un @ et un point
+    } else if (fieldName !== "email" && value !== "") {
+      return 'border-green-500'; // Vert si le champ n'est pas vide
+    }
+    return '';
+  };
+
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bigShouldersDisplay text-white p-4">
       <div className="relative flex flex-col items-center w-full max-w-md sm:max-w-lg md:max-w-xl lg:max-w-2xl xl:max-w-3xl">
@@ -64,17 +86,17 @@ function Register() {
             }
           }}
         >
-          {({ handleChange, handleBlur, values, isSubmitting }) => (
+          {({ errors, touched, handleChange, handleBlur, values, isSubmitting }) => (
             <Form className="grid grid-cols-1 sm:grid-cols-2 gap-2">
               <div className="p-3 mb-5 rounded-lg">
-                <label htmlFor="username" className="block mb-2">
+                <label htmlFor="username" className={`block mb-2 ${getLabelColor(errors, touched, 'username')}`}>
                   Nom d'utilisateur
                 </label>
                 <Field
                   name="username"
                   id="username"
                   placeholder="Entrez votre nom d'utilisateur"
-                  className="w-full p-2 text-black rounded-lg"
+                  className={`w-full p-2 text-black rounded-lg ${getFieldBorderColor(values.username, 'username')}`}
                   onChange={handleChange}
                   onBlur={handleBlur}
                   value={values.username}
@@ -82,14 +104,14 @@ function Register() {
                 <ErrorMessage name="username" component="div" className="text-red-500" />
               </div>
               <div className="p-3 mb-5 rounded-lg">
-                <label htmlFor="email" className="block mb-2">
+                <label htmlFor="email" className={`block mb-2 ${getLabelColor(errors, touched, 'email')}`}>
                   Email
                 </label>
                 <Field
                   name="email"
                   id="email"
                   placeholder="Entrez votre email"
-                  className="w-full p-2 text-black rounded-lg"
+                  className={`w-full p-2 text-black rounded-lg ${getFieldBorderColor(values.email, 'email')}`}
                   onChange={handleChange}
                   onBlur={handleBlur}
                   value={values.email}
@@ -97,16 +119,15 @@ function Register() {
                 <ErrorMessage name="email" component="div" className="text-red-500" />
               </div>
               <div className="p-3 mb-5 rounded-lg">
-                <label htmlFor="password" className="block mb-2 flex items-center">
+                <label htmlFor="password" className={`block mb-2 flex items-center ${getLabelColor(errors, touched, 'password')}`}>
                   Mot de passe
-                  <div className="relative"></div>
                 </label>
                 <Field
                   name="password"
                   id="password"
                   type={showPassword ? "text" : "password"}
                   placeholder="Entrez votre mot de passe"
-                  className="w-full p-2 text-black rounded-lg"
+                  className={`w-full p-2 text-black rounded-lg ${getFieldBorderColor(values.password, 'password')}`}
                   onChange={handleChange}
                   onBlur={handleBlur}
                   value={values.password}
@@ -129,7 +150,7 @@ function Register() {
                 <ErrorMessage name="password" component="div" className="text-red-500" />
               </div>
               <div className="p-3 mb-5 rounded-lg">
-                <label htmlFor="confirmPassword" className="block mb-2">
+                <label htmlFor="confirmPassword" className={`block mb-2 ${getLabelColor(errors, touched, 'confirmPassword')}`}>
                   Confirmer le mot de passe
                 </label>
                 <Field
@@ -137,7 +158,7 @@ function Register() {
                   id="confirmPassword"
                   type={showPassword ? "text" : "password"}
                   placeholder="Confirmez votre mot de passe"
-                  className="w-full p-2 text-black rounded-lg"
+                  className={`w-full p-2 text-black rounded-lg ${getFieldBorderColor(values.confirmPassword, 'confirmPassword')}`}
                   onChange={handleChange}
                   onBlur={handleBlur}
                   value={values.confirmPassword}

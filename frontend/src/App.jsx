@@ -17,6 +17,7 @@ import CreateGuildPage from "./components/Guild/CreateGuildPage";
 import Cards from './components/Cards/Cards';
 import Profil from './components/Profil/Profil';
 import GuildList from './components/Guild/GuildList';
+import PrivateRoutes from './utils/PrivatesRoute.jsx';
 
 import './App.css';
 
@@ -33,27 +34,30 @@ const App = () => {
       <AuthProvider>
         <Router>
           <Routes>
-            <Route element={<LayoutWithHeaderFooter />}>
-              {/* Routes with Header and Footer */}
-              <Route path="/" element={<Homepage />} />
-              <Route path="/tournamentRequest" element={<TournamentRequest />} />
-              <Route path="/tournament-register/:tournamentId" element={<TournamentRegister />} />
+            {/* Routes publiques */}
+            <Route path="/login" element={<Login />} />
+            <Route path="/register" element={<Register />} />
 
-              <Route path="/decouvrir" element={<TournamentList />} />
-              <Route path="/login" element={<Login />} />
-              <Route path="/mes-tournois" element={<MyTournament />} />
-              <Route path="/register" element={<Register />} />
-              <Route path="/profile" element={<ProfileCreation />} />
-              <Route path="/contact" element={<Contact />} />
-              <Route path="/create-guild" element={<CreateGuildPage />} />
-              <Route path="/guilds" element={<GuildList />} />
-              <Route path="/winner" element={<Winner />} />
-              <Route path="/tournament/:id/winner" element={<Winner />} />
-
-              {/* Route without Header and Footer */}
-              <Route path="*" element={<Page404 />} />
-              <Route path="/loading" element={<LoadingUser />} />
+            {/* Routes privées */}
+            <Route element={<PrivateRoutes />}>
+              <Route element={<LayoutWithHeaderFooter />}>
+                <Route path="/" element={<Homepage />} />
+                <Route path="/tournamentRequest" element={<TournamentRequest />} />
+                <Route path="/tournament-register/:tournamentId" element={<TournamentRegister />} />
+                <Route path="/decouvrir" element={<TournamentList />} />
+                <Route path="/mes-tournois" element={<MyTournament />} />
+                <Route path="/profile" element={<ProfileCreation />} />
+                <Route path="/contact" element={<Contact />} />
+                <Route path="/create-guild" element={<CreateGuildPage />} />
+                <Route path="/guilds" element={<GuildList />} />
+                <Route path="/winner" element={<Winner />} />
+                <Route path="/tournament/:id/winner" element={<Winner />} />
+              </Route>
             </Route>
+
+            {/* Route sans Header et Footer */}
+            <Route path="*" element={<Page404 />} />
+            <Route path="/loading" element={<LoadingUser />} />
           </Routes>
         </Router>
       </AuthProvider>
