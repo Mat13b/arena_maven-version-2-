@@ -4,7 +4,7 @@ const argon2 = require('argon2');
 const browse = (req, res) => {
   models.user
     .findAll()
-    .then(([rows]) => {
+    .then((rows) => {
       res.send(rows);
     })
     .catch((err) => {
@@ -16,7 +16,7 @@ const browse = (req, res) => {
 const read = (req, res) => {
   models.user
     .find(req.params.id)
-    .then(([rows]) => {
+    .then((rows) => {
       if (rows.length === 0) {
         res.sendStatus(404);
       } else {
@@ -35,7 +35,7 @@ const edit = (req, res) => {
 
   models.user
     .update(user)
-    .then(([result]) => {
+    .then((result) => {
       if (result.affectedRows === 0) {
         res.sendStatus(404);
       } else {
@@ -66,7 +66,7 @@ const findIfUserSubController= (req, res) => {
   const { tournament_id, user_id } = req.params;
   models.user
     .findIfUserSub(tournament_id, user_id)
-    .then(([rows]) => {
+    .then((rows) => {
       res.send(rows);
     })
     .catch((err) => {
@@ -79,7 +79,7 @@ const findIfUserSubController= (req, res) => {
 const getUserByEmail = (req, res, next) => {
   const { email } = req.body;
   models.user.findUserByEmail(email)
-    .then(([rows]) => {
+    .then((rows) => {
       if (rows.length > 0) {
         req.user = rows[0];
         next();
@@ -96,7 +96,7 @@ const getUserByEmail = (req, res, next) => {
 const destroy = (req, res) => {
   models.user
     .delete(req.params.id)
-    .then(([result]) => {
+    .then((result) => {
       if (result.affectedRows === 0) {
         res.sendStatus(404);
       } else {

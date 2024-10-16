@@ -22,8 +22,8 @@ function Login() {
       const response = await axios.post(
         `${import.meta.env.VITE_BACKEND_URL}/api/user/login`,
         {
-          email: values.adresse_email,
-          mot_de_passe: values.mot_de_passe,
+          email: values.email,
+          password: values.password,
         }
       );
       console.log("Utilisateur connecté avec succès:", response.data);
@@ -55,8 +55,8 @@ function Login() {
       console.error("Erreur de connexion:", error);
       if (error.response) {
         if (error.response.status === 401) {
-          setFieldError("adresse_email", "Adresse email ou mot de passe incorrect");
-          setFieldError("mot_de_passe", "Adresse email ou mot de passe incorrect");
+          setFieldError("email", "Adresse email ou mot de passe incorrect");
+          setFieldError("password", "Adresse email ou mot de passe incorrect");
         } else if (error.response.status === 500) {
           setSubmitStatus({ type: 'error', message: 'Erreur serveur. Veuillez réessayer plus tard.' });
         } else {
@@ -90,13 +90,13 @@ function Login() {
       <div className="w-full max-w-md sm:max-w-lg md:max-w-xl lg:max-w-2xl xl:max-w-3xl mt-10 bg-primary mt-20">
         <article className="p-6">
           <Formik
-            initialValues={{ adresse_email: "", mot_de_passe: "" }}
+            initialValues={{ email: "", password: "" }}
             validationSchema={yup.object().shape({
-              adresse_email: yup
+              email: yup
                 .string()
                 .email("Email invalide")
                 .required("L'adresse email est requise"),
-              mot_de_passe: yup
+              password: yup
                 .string()
                 .min(
                   8,
@@ -113,16 +113,16 @@ function Login() {
                     Adresse email
                   </label>
                   <Field
-                    name="adresse_email"
-                    id="adresse_email"
+                    name="email"
+                    id="email"
                     placeholder="Entrez votre adresse email"
                     className="w-full p-2 text-black rounded-lg"
                     onChange={handleChange}
                     onBlur={handleBlur}
-                    value={values.adresse_email}
+                    value={values.email}
                   />
                   <ErrorMessage
-                    name="adresse_email"
+                    name="email"
                     component="div"
                     className="text-red-500"
                   />
@@ -164,7 +164,7 @@ function Login() {
                       Mot de passe oublié
                     </label>
                     <ErrorMessage
-                      name="password"
+                      name="mot_de_passe"
                       component="div"
                       className="text-red-500 text-danger"
                     />
