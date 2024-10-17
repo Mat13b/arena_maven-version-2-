@@ -11,7 +11,7 @@ const AuthProvider = ({ children }) => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
 
   const login = (userData) => {
-    if (userData && userData.email) {
+    if (userData && userData.id) {
       setUser(userData);
       setIsAuthenticated(true);
       console.log('Utilisateur connecté:', userData);

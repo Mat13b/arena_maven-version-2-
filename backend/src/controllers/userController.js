@@ -1,5 +1,6 @@
+const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
 const models = require("../models");
-const argon2 = require('argon2');
 
 const browse = (req, res) => {
   models.user
@@ -50,17 +51,23 @@ const edit = (req, res) => {
 
 const add = async (req, res) => {
   try {
-    const user = req.body;
-    // user.password = await argon2.hash(user.password);
+    const { username, email, password } = req.body;
+    const hashedPassword = await bcrypt.hash(password, 10);
+    const user = {
+      username,
+      email,
+      password: hashedPassword,
+      profil_picture: req.body.profil_picture || null,
+      role: req.body.role || 'user'
+    };
 
     const result = await models.user.insert(user);
-    res.location(`/user/${result.insertId}`).sendStatus(201);
+    res.status(201).json({ id: result.insertId, message: "Utilisateur créé avec succès" });
   } catch (err) {
     console.error(err);
-    res.status(500).json({ message: "Internal server error" });
+    res.status(500).json({ message: "Erreur lors de la création de l'utilisateur" });
   }
 };
-
 
 const findIfUserSubController= (req, res) => {
   const { tournament_id, user_id } = req.params;
@@ -74,7 +81,6 @@ const findIfUserSubController= (req, res) => {
       res.sendStatus(500);
     });
 };
-
 
 const getUserByEmail = (req, res, next) => {
   const { email } = req.body;
@@ -109,12 +115,41 @@ const destroy = (req, res) => {
     });
 };
 
+const login = async (req, res) => {
+  try {
+    const { password } = req.body;
+    const user = req.user; // L'utilisateur a déjà été trouvé par getUserByEmail
+
+    if (!user) {
+      return res.status(401).json({ message: "Email ou mot de passe incorrect" });
+    }
+
+    const isPasswordValid = await bcrypt.compare(password, user.password);
+
+    if (!isPasswordValid) {
+      return res.status(401).json({ message: "Email ou mot de passe incorrect" });
+    }
+
+    const token = jwt.sign(
+      { id: user.id, username: user.username, email: user.email, role: user.role },
+      process.env.JWT_SECRET,
+      { expiresIn: '1h' }
+    );
+
+    res.json({ token, user: { id: user.id, username: user.username, email: user.email, role: user.role } });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Erreur lors de la connexion" });
+  }
+};
+
 module.exports = {
   browse,
   read,
   edit,
   add,
-  destroy,
-  getUserByEmail,
   findIfUserSubController,
+  getUserByEmail,
+  destroy,
+  login
 };

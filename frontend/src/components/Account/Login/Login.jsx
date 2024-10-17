@@ -1,4 +1,4 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as yup from "yup";
 
@@ -13,6 +13,12 @@ function Login() {
   const { login, isAuthenticated, user } = useContext(AuthContext);
   const navigate = useNavigate();
 
+  useEffect(() => {
+    if (isAuthenticated) {
+      navigate('/');
+    }
+  }, [isAuthenticated, navigate]);
+
   const togglePasswordVisibility = () => {
     setShowPassword(!showPassword);
   };
@@ -21,61 +27,41 @@ function Login() {
     try {
       const response = await axios.post(
         `${import.meta.env.VITE_BACKEND_URL}/api/user/login`,
-        {
-          email: values.email,
-          password: values.password,
-        }
+        values
       );
-      console.log("Utilisateur connecté avec succès:", response.data);
-      setSubmitStatus({ type: 'success', message: 'Connexion réussie!' });
-      resetForm();
-      localStorage.setItem("token", response.data.token);
-      console.log("Données de la réponse:", response.data);
-
-      if (response.data && response.data.token) {
-        localStorage.setItem("token", response.data.token);
-        
-        // Décodage du token pour obtenir les informations de l'utilisateur
-        const tokenPayload = JSON.parse(atob(response.data.token.split('.')[1]));
-        const userData = tokenPayload.sub;
-      
-        if (userData && userData.email) {
-          login(userData);
-          setSubmitStatus({ type: 'success', message: 'Connexion réussie!' });
-          navigate('/');
-        } else {
-          console.warn('Données utilisateur incomplètes dans le token');
-          setSubmitStatus({ type: 'error', message: 'Erreur lors de la connexion. Veuillez réessayer.' });
-        }
+      if (response.data && response.data.token && response.data.user) {
+        localStorage.setItem('token', response.data.token);
+        login(response.data.user);
+        setSubmitStatus({ type: 'success', message: 'Connexion réussie!' });
+        navigate('/');
       } else {
-        console.warn('Structure de la réponse invalide:', JSON.stringify(response.data, null, 2));
-        setSubmitStatus({ type: 'error', message: 'Erreur lors de la connexion. Veuillez réessayer.' });
+        setSubmitStatus({ type: 'error', message: 'Réponse du serveur invalide.' });
       }
     } catch (error) {
       console.error("Erreur de connexion:", error);
       if (error.response) {
+        console.error("Réponse d'erreur:", error.response.data);
         if (error.response.status === 401) {
-          setFieldError("email", "Adresse email ou mot de passe incorrect");
-          setFieldError("password", "Adresse email ou mot de passe incorrect");
-        } else if (error.response.status === 500) {
-          setSubmitStatus({ type: 'error', message: 'Erreur serveur. Veuillez réessayer plus tard.' });
+          setSubmitStatus({ type: 'error', message: error.response.data.message || 'Email ou mot de passe incorrect' });
         } else {
-          setSubmitStatus({ type: 'error', message: 'Erreur lors de la connexion. Veuillez réessayer.' });
+          setSubmitStatus({ type: 'error', message: `Erreur ${error.response.status}: ${error.response.data.message || 'Erreur inconnue'}` });
         }
-      } else {
+      } else if (error.request) {
+        console.error("Pas de réponse reçue:", error.request);
         setSubmitStatus({ type: 'error', message: 'Erreur réseau. Veuillez vérifier votre connexion.' });
+      } else {
+        console.error("Erreur de configuration de la requête:", error.message);
+        setSubmitStatus({ type: 'error', message: 'Erreur inattendue. Veuillez réessayer.' });
       }
     }
     setSubmitting(false);
   };
 
   if (isAuthenticated) {
-    return (
-      <div>
-        <p>Bienvenue, {user.name}</p>
-        <button onClick={() => navigate('/dashboard')}>Aller au tableau de bord</button>
-      </div>
-    );
+    return <div>
+      <h1>Bienvenue {user.username}</h1>
+      <button onClick={() => navigate('/')}>Aller à l'accueil</button>
+    </div>
   }
 
   return (

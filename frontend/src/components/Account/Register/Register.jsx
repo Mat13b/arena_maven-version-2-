@@ -65,7 +65,7 @@ function Register() {
           })}
           onSubmit={async (values, { setSubmitting, resetForm }) => {
             if (values.password !== values.confirmPassword) {
-              console.log('Les mots de passe ne correspondent pas');
+              setSubmitStatus({ type: 'error', message: 'Les mots de passe ne correspondent pas' });
               return;
             }
             try {
@@ -73,14 +73,13 @@ function Register() {
                 username: values.username,
                 email: values.email,
                 password: values.password,
-                // Ajoutez d'autres champs si nécessaires
               });
               console.log('Utilisateur inscrit avec succès:', response.data);
-              setSubmitStatus({ type: 'success', message: 'Utilisateur inscrit avec succès!' });
+              setSubmitStatus({ type: 'success', message: 'Inscription réussie! Vous pouvez maintenant vous connecter.' });
               resetForm();
             } catch (error) {
               console.error('Erreur lors de l\'inscription:', error);
-              setSubmitStatus({ type: 'error', message: 'Erreur lors de l\'inscription. Veuillez réessayer.' });
+              setSubmitStatus({ type: 'error', message: error.response?.data?.message || 'Erreur lors de l\'inscription. Veuillez réessayer.' });
             } finally {
               setSubmitting(false);
             }

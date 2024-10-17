@@ -31,10 +31,10 @@ router.post("/contact", verifyToken, (req, res) => {
 });
 
 // Route pour l'inscription des utilisateurs
-router.post('/user/register', hashPassword, userController.add);
+router.post('/user/register', userController.add);
 
 // Route pour la connexion des utilisateurs
-router.post('/user/login', userController.getUserByEmail, verifyPassword);
+router.post('/user/login', userController.getUserByEmail, verifyPassword, userController.login);
 
 // Routes pour les tournois
 router.get("/tournament", tournamentControllers.browse);

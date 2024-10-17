@@ -1,4 +1,4 @@
-const argon2 = require('argon2');
+const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 
 // Fonction de hachage de mot de passe
@@ -7,7 +7,7 @@ const hashPassword = async (req, res, next) => {
     if (!req.body.password) {
       throw new Error('Password is required');
     }
-    req.body.password = await argon2.hash(req.body.password);
+    req.body.password = await bcrypt.hash(req.body.password, 10);
     next();
   } catch (error) {
     console.error('Error hashing password:', error);
@@ -18,27 +18,28 @@ const hashPassword = async (req, res, next) => {
 // Fonction de vérification de mot de passe
 const verifyPassword = async (req, res, next) => {
   try {
-    const isValid = await argon2.verify(req.user.password, req.body.password);
-    if (!isValid) {
-      return res.status(401).send('Unauthorized');
+    console.log('Tentative de connexion pour:', req.body.email);
+    console.log('Mot de passe fourni:', req.body.password);
+    console.log('Utilisateur trouvé:', req.user);
+
+    if (!req.user || !Array.isArray(req.user) || req.user.length === 0 || !req.user[0].password) {
+      console.error('Utilisateur ou mot de passe manquant');
+      return res.status(401).json({ message: 'Email ou mot de passe incorrect' });
     }
 
-    // Création du token JWT
-    const payload = {
-      sub: {
-        id: req.user.id,
-        username: req.user.username,
-        email: req.user.email,
-        role: req.user.role
-      }
-    };
-    const token = jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: '1h' }); // Expiration après 1 heure
+    const user = req.user[0]; // Prendre le premier (et seul) utilisateur du tableau
+    const isValid = await bcrypt.compare(req.body.password, user.password);
+    console.log('Résultat de la comparaison:', isValid);
 
-    // Envoi du token et de l'ID utilisateur dans la réponse
-    res.json({ token, user: req.user.id });
+    if (!isValid) {
+      return res.status(401).json({ message: 'Email ou mot de passe incorrect' });
+    }
+
+    req.user = user; // Mettre à jour req.user avec l'objet utilisateur
+    next();
   } catch (error) {
     console.error('Error verifying password:', error);
-    res.status(500).send('Internal Server Error');
+    res.status(500).json({ message: 'Erreur interne du serveur', error: error.message });
   }
 };
 

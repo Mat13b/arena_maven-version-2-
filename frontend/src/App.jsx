@@ -90,10 +90,10 @@ function AuthStatus() {
   const userInfo = getUserInfo();
 
 
-  console.log("yugygygyg",isAuthenticated);
+  console.log("",isAuthenticated);
   return (
     <div>
-      {isAuthenticated || isLog(token) ? `Logged in as ${userInfo.sub.username}` : 'Not logged in'}
+      {isAuthenticated || isLog(token) ? `Bienvenue, tu es connecté ${userInfo.sub.username}` : 'Non connecté'}
     </div>
   );
 }
