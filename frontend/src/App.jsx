@@ -31,8 +31,8 @@ import LoadingUser from '@components/LoadingUser/LoadingUser.jsx';
 const App = () => {
   return (
     <div className="bg-gradient-to-tr from-black via-vertBG to-black min-h-screen flex flex-col">
-      <AuthProvider>
-        <Router>
+      <Router>
+        <AuthProvider>
           <Routes>
             {/* Routes publiques */}
             <Route path="/login" element={<Login />} />
@@ -59,8 +59,8 @@ const App = () => {
             <Route path="*" element={<Page404 />} />
             <Route path="/loading" element={<LoadingUser />} />
           </Routes>
-        </Router>
-      </AuthProvider>
+        </AuthProvider>
+      </Router>
     </div>
   );
 };

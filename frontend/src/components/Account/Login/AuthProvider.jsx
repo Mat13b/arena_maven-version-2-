@@ -2,6 +2,7 @@ import React, { createContext, useState } from 'react';
 import axios from 'axios';
 export const AuthContext = createContext();
 import { jwtDecode } from 'jwt-decode';
+import { useNavigate } from 'react-router-dom';
 
 
 
@@ -10,13 +11,15 @@ const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
 
-  const login = (userData) => {
+  const login = async (userData) => {
     if (userData && userData.id) {
-      setUser(userData);
-      setIsAuthenticated(true);
-      console.log('Utilisateur connecté:', userData);
-    } else {
-      console.warn('Données utilisateur invalides:', userData);
+      try {
+        setUser(userData);
+        setIsAuthenticated(true);
+        console.log('Utilisateur connecté:', userData);
+      } catch (error) {
+        console.error('Erreur lors de la connexion:', error);
+      }
     }
   };
 
@@ -55,7 +58,15 @@ const AuthProvider = ({ children }) => {
   };
 
   return (
-    <AuthContext.Provider value={{ user, isLog, login, logout, isAuthenticated }}>
+    <AuthContext.Provider 
+      value={{ 
+        user, 
+        login, 
+        logout, 
+        isAuthenticated,
+        isLog 
+      }}
+    >
       {children}
     </AuthContext.Provider>
   );

@@ -6,6 +6,8 @@ import { Link, useNavigate } from "react-router-dom";
 
 import axios from "axios";
 import { AuthContext } from "./AuthProvider";
+import Header from '../../Header/Header';  // Ajoutez les imports nécessaires
+import Footer from '../../Footer/Footer';
 
 function Login() {
   const [showPassword, setShowPassword] = useState(false);
@@ -13,17 +15,17 @@ function Login() {
   const { login, isAuthenticated, user } = useContext(AuthContext);
   const navigate = useNavigate();
 
-  useEffect(() => {
-    if (isAuthenticated) {
-      navigate('/');
-    }
-  }, [isAuthenticated, navigate]);
-
   const togglePasswordVisibility = () => {
     setShowPassword(!showPassword);
   };
 
-  const handleLogin = async (values, { setSubmitting, setFieldError, resetForm }) => {
+  useEffect(() => {
+    if (isAuthenticated && user) {
+      navigate('/', { replace: true }); // Ceci devrait vous rediriger vers la Homepage
+    }
+  }, [isAuthenticated, user, navigate]);
+
+  const handleLogin = async (values, { setSubmitting }) => {
     try {
       const response = await axios.post(
         `${import.meta.env.VITE_BACKEND_URL}/api/user/login`,
@@ -31,39 +33,34 @@ function Login() {
       );
       if (response.data && response.data.token && response.data.user) {
         localStorage.setItem('token', response.data.token);
-        login(response.data.user);
+        await login(response.data.user);
         setSubmitStatus({ type: 'success', message: 'Connexion réussie!' });
-        navigate('/');
-      } else {
-        setSubmitStatus({ type: 'error', message: 'Réponse du serveur invalide.' });
       }
     } catch (error) {
-      console.error("Erreur de connexion:", error);
-      if (error.response) {
-        console.error("Réponse d'erreur:", error.response.data);
-        if (error.response.status === 401) {
-          setSubmitStatus({ type: 'error', message: error.response.data.message || 'Email ou mot de passe incorrect' });
-        } else {
-          setSubmitStatus({ type: 'error', message: `Erreur ${error.response.status}: ${error.response.data.message || 'Erreur inconnue'}` });
-        }
-      } else if (error.request) {
-        console.error("Pas de réponse reçue:", error.request);
-        setSubmitStatus({ type: 'error', message: 'Erreur réseau. Veuillez vérifier votre connexion.' });
-      } else {
-        console.error("Erreur de configuration de la requête:", error.message);
-        setSubmitStatus({ type: 'error', message: 'Erreur inattendue. Veuillez réessayer.' });
-      }
+      setSubmitStatus({ 
+        type: 'error', 
+        message: 'Erreur de connexion. Veuillez vérifier vos identifiants.' 
+      });
     }
     setSubmitting(false);
   };
 
-  if (isAuthenticated) {
-    return <div>
-      <h1>Bienvenue {user.username}</h1>
-      <button onClick={() => navigate('/')}>Aller à l'accueil</button>
-    </div>
+  // Modification du retour conditionnel pour inclure le layout complet
+  if (isAuthenticated && user) {
+    return (
+      <div className="bg-gradient-to-tr from-black via-vertBG to-black min-h-screen flex flex-col">
+        <Header />
+        <main className="flex-grow">
+          <div className="p-4"> {/* Conteneur pour le message de bienvenue */}
+            <h1 className="text-2xl text-white">Bienvenue {user.username}</h1>
+          </div>
+        </main>
+        <Footer />
+      </div>
+    );
   }
 
+  // Sinon afficher le formulaire de connexion
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bigShouldersDisplay text-white p-4">
       <div className="relative flex flex-col items-center w-full max-w-md sm:max-w-lg md:max-w-xl lg:max-w-2xl xl:max-w-3xl">

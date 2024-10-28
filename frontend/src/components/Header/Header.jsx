@@ -21,7 +21,6 @@ function classNames(...classes) {
 }
 
 export default function Header() {
-
   const { userData, isAuthenticated, handleLogout } = useContext(AuthContext);
 
   const navigate = useNavigate();
@@ -32,8 +31,8 @@ export default function Header() {
         <>
           <div className="mx-auto">
             <div className="relative flex h-20 items-center justify-between">
-              <div className="absolute inset-y-0 left-0 flex items-center bp1000:hidden">
-                {/* Mobile menu button */}
+              {/* On cache le bouton burger si l'utilisateur est connecté */}
+              <div className={`absolute inset-y-0 left-0 flex items-center ${isAuthenticated ? 'hidden' : 'bp1000:hidden'}`}>
                 <Disclosure.Button className="relative inline-flex items-center justify-center rounded-md p-2 text-white hover:bg-primary hover:text-white focus:outline-none">
                   <span className="absolute -inset-0.5" />
                   <span className="sr-only">Ouvrir le menu principal</span>
@@ -45,9 +44,9 @@ export default function Header() {
                 </Disclosure.Button>
               </div>
 
-              {/* Navigation buttons */}
+              {/* Navigation buttons - toujours visible si connecté */}
               <div className="flex flex-1 items-center justify-center bp1000:justify-center">
-                <div className="hidden bp1000:ml-6 bp1000:block">
+                <div className={`${isAuthenticated ? 'block' : 'hidden bp1000:block'}`}>
                   <div className="flex space-x-4 mx-auto">
                     {navigation.map((item) => (
                       <Link
@@ -137,26 +136,28 @@ export default function Header() {
             </div>
           </div>
 
-          {/* Mobile navigation */}
-          <Disclosure.Panel className="bp1000:hidden min-[320px]">
-            <div className="space-y-1 px-2 pb-3 pt-2">
-              {navigation.map((item) => (
-                <Disclosure.Button
-                  key={item.name}
-                  as={Link}
-                  to={item.href}
-                  className={classNames(
-                    item.current ? 'bg-primary text-white' : 'text-white hover:bg-primary hover:text-white',
-                    'block rounded-md px-3 py-2 text-base font-medium glitch-btn'
-                  )}
-                  data-text={item.name}
-                  aria-current={item.current ? 'page' : undefined}
-                >
-                  {item.name}
-                </Disclosure.Button>
-              ))}
-            </div>
-          </Disclosure.Panel>
+          {/* Mobile navigation - caché si connecté */}
+          {!isAuthenticated && (
+            <Disclosure.Panel className="bp1000:hidden min-[320px]">
+              <div className="space-y-1 px-2 pb-3 pt-2">
+                {navigation.map((item) => (
+                  <Disclosure.Button
+                    key={item.name}
+                    as={Link}
+                    to={item.href}
+                    className={classNames(
+                      item.current ? 'bg-primary text-white' : 'text-white hover:bg-primary hover:text-white',
+                      'block rounded-md px-3 py-2 text-base font-medium glitch-btn'
+                    )}
+                    data-text={item.name}
+                    aria-current={item.current ? 'page' : undefined}
+                  >
+                    {item.name}
+                  </Disclosure.Button>
+                ))}
+              </div>
+            </Disclosure.Panel>
+          )}
         </>
       )}
     </Disclosure>
