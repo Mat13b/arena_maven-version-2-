@@ -1,4 +1,4 @@
-import { BrowserRouter as Router, Route, Routes, Outlet } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Routes, Navigate, Outlet } from 'react-router-dom';
 import Header from './components/Header/Header.jsx';
 import Footer from '@components/Footer/Footer';
 import Homepage from '@components/Homepage/Homepage';
@@ -65,38 +65,39 @@ const App = () => {
   );
 };
 
-function AuthStatus() {
-  const { isLog, isAuthenticated } = useContext(AuthContext);
+// Composant AuthStatus modifié pour gérer le cas où user est null
+const AuthStatus = () => {
+  const { isAuthenticated, user } = useContext(AuthContext);
+  const token = localStorage.getItem('token');
 
-  const getToken = () => {
-    return localStorage.getItem('token');
-  };
-  const token = getToken();
-
-  
-  
-  const getUserInfo = () => {
-    if (token) {
-      try {
-        const decodedToken = jwtDecode(token);
-        return decodedToken; // { id, username, email, role }
-      } catch (error) {
-        console.error("Invalid token:", error);
-        return null;
-      }
-    }
-    return null;
-  };
-  const userInfo = getUserInfo();
-
-
-  console.log("",isAuthenticated);
   return (
-    <div>
-      {isAuthenticated || isLog(token) ? `Bienvenue, tu es connecté ${userInfo.sub.username}` : 'Non connecté'}
+    <div className="text-white text-center py-2 bg-black">
+      Status: {isAuthenticated || token ? 'Connecté' : 'Non connecté'}
+      {user && user.username && ` - Utilisateur: ${user.username}`}
     </div>
   );
-}
+};
+
+// Layout pour les routes privées
+const PrivateLayout = ({ children }) => {
+  const { isAuthenticated } = useContext(AuthContext);
+  const token = localStorage.getItem('token');
+
+  if (!isAuthenticated && !token) {
+    return <Navigate to="/login" replace />;
+  }
+
+  return (
+    <>
+      <Header />
+      <AuthStatus />
+      <main className="flex-grow">
+        {children}
+      </main>
+      <Footer />
+    </>
+  );
+};
 
 // Layout Component with Header and Footer
 const LayoutWithHeaderFooter = () => (

@@ -2,7 +2,7 @@ import React, { useState, useContext, useEffect } from "react";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as yup from "yup";
 
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, Navigate } from "react-router-dom";
 
 import axios from "axios";
 import { AuthContext } from "./AuthProvider";
@@ -12,18 +12,12 @@ import Footer from '../../Footer/Footer';
 function Login() {
   const [showPassword, setShowPassword] = useState(false);
   const [submitStatus, setSubmitStatus] = useState(null);
-  const { login, isAuthenticated, user } = useContext(AuthContext);
+  const { login, isAuthenticated } = useContext(AuthContext);
   const navigate = useNavigate();
 
   const togglePasswordVisibility = () => {
     setShowPassword(!showPassword);
   };
-
-  useEffect(() => {
-    if (isAuthenticated && user) {
-      navigate('/', { replace: true }); // Ceci devrait vous rediriger vers la Homepage
-    }
-  }, [isAuthenticated, user, navigate]);
 
   const handleLogin = async (values, { setSubmitting }) => {
     try {
@@ -34,16 +28,20 @@ function Login() {
       if (response.data && response.data.token && response.data.user) {
         localStorage.setItem('token', response.data.token);
         await login(response.data.user);
-        setSubmitStatus({ type: 'success', message: 'Connexion réussie!' });
+        navigate('/', { replace: true });
       }
     } catch (error) {
       setSubmitStatus({ 
         type: 'error', 
-        message: 'Erreur de connexion. Veuillez vérifier vos identifiants.' 
+        message: 'Erreur de connexion.' 
       });
     }
     setSubmitting(false);
   };
+
+  if (isAuthenticated) {
+    return <Navigate to="/" />;
+  }
 
   // Modification du retour conditionnel pour inclure le layout complet
   if (isAuthenticated && user) {
